@@ -1,0 +1,35 @@
+Metadata-Version: 2.4
+Name: hetset
+Version: 0.1.0
+Summary: Partial Identification of Heterogeneous Treatment Effects across Settings
+Author: Nick Huntington-Klein
+Author-email: nhuntington-klein@seattleu.edu
+License: MIT
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Scientific/Engineering :: Mathematics
+Requires-Python: >=3.8
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: scipy
+Requires-Dist: statsmodels
+Provides-Extra: sensemakr
+Requires-Dist: PySensemakr; extra == "sensemakr"
+Provides-Extra: data
+Requires-Dist: pyreadr; extra == "data"
+Provides-Extra: all
+Requires-Dist: PySensemakr; extra == "all"
+Requires-Dist: pyreadr; extra == "all"
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: license
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+Python port of the hetset R package. Allows for the partial identification of causal effects that vary heterogeneously across settings, as in Huntington-Klein (2025). Uses statsmodels for regression and PySensemakr for sensitivity analysis.

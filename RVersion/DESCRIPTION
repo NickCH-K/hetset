@@ -1,0 +1,34 @@
+Package: hetset
+Type: Package
+Title: Partial Identification of Heterogeneous Treatment Effects across Settings
+Version: 0.1.0
+Authors@R: c(
+    person(
+      "Nick", "Huntington-Klein",
+      email = "nhuntington-klein@seattleu.edu",
+      role = c("aut", "cre")
+    )
+  )
+Description: This package allows for the partial identification of causal effects that vary heterogeneously across settings, as in Huntington-Klein (2025).
+License: MIT
+Imports:
+    utils,
+    stats,
+    fixest,
+    sensemakr,
+    Rglpk
+Suggests:
+    dml.sensemakr
+Depends:
+    data.table,
+    R (>= 3.5)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.3
+Collate: 
+    'bias_relationship_bounds.R'
+    'data.R'
+    'effect_estimate.R'
+    'effect_estimate_sensemakr.R'
+    'helpers.R'
+    'effect_sets.R'

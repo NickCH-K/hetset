@@ -1,0 +1,14 @@
+numpy
+pandas
+scipy
+statsmodels
+
+[all]
+PySensemakr
+pyreadr
+
+[data]
+pyreadr
+
+[sensemakr]
+PySensemakr

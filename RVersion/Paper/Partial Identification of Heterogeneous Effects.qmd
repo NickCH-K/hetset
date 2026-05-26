@@ -1,0 +1,300 @@
+---
+title: "Partial Identification of Variation in Causal Effects"
+author: "Nick Huntington-Klein"
+format: pdf
+editor: visual
+---
+
+# Introduction
+
+-   Heterogeneity of effects is good
+
+-   quasiexperiments require certain settings that prohibit the identification of heterogeneity. If a policy shock only happens once you can't see how the effect varies in different settings!
+
+-   People don't generally believe identification by selection on observables, but we can bound with partial ID
+
+# Partial Identification
+
+-   The recent lit on partial identification in selection on observables settings
+
+-   The basic intuition behind bounding the bias
+
+-   Chernozhukov, Cinelli and Hazlett
+
+<https://www.tandfonline.com/doi/abs/10.1080/07474938.2023.2178140%4010.1080/tfocoll.2024.0.issue-prize-page-emerging-econometrician>
+
+<https://irbe.library.vanderbilt.edu/server/api/core/bitstreams/008aa0e7-0c02-4f53-b4e9-9cd705edab87/content>
+
+<https://www.annualreviews.org/content/journals/10.1146/annurev-economics-051520-021124>
+
+two treatments -\> <https://arxiv.org/pdf/2303.06332>
+
+subgroups i project star -\> <https://arxiv.org/abs/2505.24296>
+
+distribution of treatment effect -\> <https://www.emerald.com/books/edited-volume/12844/chapter-abstract/83204745/Partial-identification-of-the-distribution-of?redirectedFrom=fulltext>
+
+<https://gemini.google.com/app/24a8344d69bf7636>
+
+# Partial Identification of Effect Variation
+
+## Omitted Variable Bias
+
+We first establish notation and the initial problem by following Chernozhukov XXX. Consider a partially linear "long" regression of the form
+
+$$
+Y =\theta D+f(X,A)+\varepsilon 
+$$
+
+where $Y$ is a continuously-valued outcome, $D$ is a real-valued treatment, $X$ is a vector of observed covariates, and $A$ is a vector of unobserved covariates. $\varepsilon$ is independent of other determinants of $Y$ such that $E(\varepsilon|D,X,A)=0$.
+
+Since $A$ is unobserved, we attempt to estimate $\theta$ using the list of observed regressors in a "short" regression model that leaves out $A$:
+
+$$
+ Y=\theta_s D+f_s(X)+\varepsilon_s
+$$
+
+Generally we expect that $\theta\neq\theta_s$. The difference between the two, $\theta_s-\theta$, is referred to as omitted variable bias (OVB).
+
+Following Frisch-Waugh-Lovell, we can express the long parameter $\theta$ as the linear projection of $Y$ on the residuals from predicting $D$ using $A$ and $X$, or
+
+$$
+\theta= E\left(Y\frac{D-E(D|X,A)}{E(D-E(D|X,A))^2}\right)\equiv E(Y\alpha)
+$$and similarly for the short parameter
+
+$$
+\theta_s= E\left(Y\frac{D-E(D|X)}{E(D-E(D|X))^2}\right)\equiv E(Y\alpha_s(W^s))
+$$
+
+Next we take as shorthand that $g$ represents the outcome regression function such that $g=E(Y|D,X,A)$ and $g_s=E(Y|D,X)$. Under this notations, the omitted variable bias incurred by using the short regression model to estimate $\theta$ is given by
+
+$$
+\theta_s-\theta=E(g_s-g)(\alpha_s-\alpha)\equiv B
+$$
+
+This is effectively the correlation between regression error ($g_s-g$) and error in prediction of the treatment ($\alpha_s-\alpha$). From here we deviate from Chernozhukov XXX.
+
+## Omitted Variable Bias in Multiple Settings {#sec-multiple-settings}
+
+Consider that the above omitted variable bias problem applies broadly. Given two samples (which may come from different settings) $A$ and $B$, two short regressions estimated separately from each sample would produce omitted variable biases in those samples $B^A$ and $B^B$.
+
+Then consider any partial identification method for both $B^A$ and $B^B$ that allow both terms to be constrained within a plausible lower and upper bound:
+
+$$
+B^A\in[\nu^A_l,\nu^A_u]; B^B\in[\nu^B_l,\nu^B_u]
+$$
+
+Next we impose a linearity assumption on the relationship between these two biases, such that
+
+$$
+B^A=\rho^{AB}B^B
+$$
+
+with the coefficient $\rho^{AB}$ given a plausible upper and lower bound of $\rho^{AB}\in[\rho^{AB}_l,\rho^{AB}_u]$, further simplifying to a single multiplicative bound parameter $\rho^{AB}\in[1/\rho^{AB}_u,\rho^{AB}_u]; \rho^{AB}_u>1$.
+
+Under this relationship, the set of plausible joint values of $(B^A, B^B)$ is constrained beyond what is achieved by the individual bounds, since each bias must be consistent both with its own bounds and the relationship with the other setting's bounds. The difference in biases $D^{AB}$ is
+
+$$
+D^{AB}=B^A-B^B = (\rho^{AB}-1)B^B
+$$
+
+Keeping in mind that $B^B\in[\nu^B_l,\nu^B_u]$ and $\rho^{AB}\in[1/\rho^{AB}_u,\rho^{AB}_u]; \rho^{AB}_u>1$, this gives four potential values that could be the maximum or minimum value of $D^{AB}$, the set $\mathbb{C}$:
+
+$$
+\mathbb{C} = \left\{\frac{1-\rho_u^{AB}}{\rho_u^{AB}}\nu_l^B,(\rho_u^{AB}-1)\nu_l^B,\frac{1-\rho_u^{AB}}{\rho_u^{AB}}\nu_u^B,(\rho_u^{AB}-1)\nu_u^B\right\}
+$$
+
+$$
+D^{AB} \in [\min(\mathbb{C}),\max(\mathbb{C})]
+$$
+
+Noting that, since both $\nu_l^B$ and $\nu_u^B$ can be negative or positive, we cannot refine further which of the four set entries could be the minimum or maximum. This restriction on $D^{AB}$ leads to a set of three restrictions on the plausible sets for $\theta^A$ and $\theta^B$:
+
+$$
+\theta^A\in[\theta^A_s-\nu^A_u, \theta^A_s-\nu^A_l]
+$$
+
+$$
+\theta^B\in[\theta^B_s-\nu^B_u, \theta^B_s-\nu^B_l]
+$$
+
+$$
+\theta^A-\theta^B\in[(\theta^A_s-\theta^B_s)+\min(\mathbb{C}),(\theta^A_s-\theta^B_s)+\max(\mathbb{C})]
+$$
+
+To consider an example of how the third restriction can be informative, consider the simple case of $\theta^A_s=$ $\theta^B_s=1$, $\nu_l^A=$ $\nu_l^B=-1$ , $\nu_u^A=$ $\nu_u^B=1$, and $\rho_u^{AB}=2$. The first two restrictions alone enforce $\theta^A\in[0,2]$, $\theta^B\in[0,2]$. Then,
+
+$$
+\mathbb{C}=\left\{\frac{1}{2},-1,-\frac{1}{2},1\right\}
+$$ which gives the restriction
+
+$$
+\theta^A-\theta^B\in[-1,1]
+$$ and rules out any combination of $\theta^A$ and $\theta^B$ that differ by more than 1 unit, such as $(\theta^A, \theta^B)=(0, 2)$, which would have been permitted by the first two restrictions $\theta^A\in[0,2]$ and $\theta^B\in[0,2]$ alone.
+
+This set of paired restrictions can be repeated across any number of different pairs of settings to further restrict the plausible joint set of effects. This is a straightforward and easily calculable way to narrow the set of plausible bounds for the same effect estimated across many settings, using any initial approach to selecting individual-effect bounds, and a set of plausible assumptions for the relationships between bounds across settings.
+
+This paper considers the simplifying set of assumptions applied here, in particular linearity and a proportionally symmetrical relationship between biases. However, the same concept can apply more generally, and this is explored in Appendix XXX.
+
+# Selecting Baseline Plausible Bounds
+
+There are two kinds of plausible bounds that must be selected to perform the method in @sec-multiple-settings. The first is the selection of the individual-setting bounds $\nu_l^i$ and $\nu_u^i$ which bound the degree of omitted variable bias in each setting $i$. This can be done in any number of ways, for example using the methods outlined in XXX cinelli and hazlett, XXX chernozhukov, cinelli, hazlett, or XXX rosenbaum bounds.
+
+The second parameter that must be bounded is $\rho^{jk}$, the linear relationship between the omitted variable bias in setting $j$ and the bias in setting $k$ for each pair of settings $(j, k)$.
+
+$\rho^{jk}$ can be bounded using external knowledge. For example, if the settings represent geographic locations, plausibility (or a data-based approach as below) can be used to bound $\rho^{jk}$ for adjacent locations, and then non-adjacent locations can have no modeled relationship, or the relationship can decay be widening the bounds on the relationship as a function of distance.
+
+A data-based approach to bounding (either for all pairs of settings or a subset) can make use of an approach similar to XXX cinelli and hazlett where we use the bias resolved by a set of observed variables as a benchmark for bias that might be resolved by the addition of unobserved variables. We begin with the short regression:
+
+$$
+ Y=\theta_s D+f_s(X)+\varepsilon_s
+$$
+
+and further segment $X$ into two covariate sets, $X_1$ and $X_2$, where $X_2$ is non-empty. Then, we estimate the short regression in setting $A$, as well as the super-short regression:
+
+$$
+Y=\theta_{ss}D+f_{ss}(X_1)+\varepsilon_{ss}
+$$ Then, the difference between the estimated $\theta_s$ and $\theta_{ss}$ is the omitted variable bias that is removed by the addition of $X_2$ to the model, $B^A_{ss}=\hat{\theta}^A_s-\hat{\theta}^A_{ss}$ .
+
+A bound on $\rho^{AB}$ can then be given by $\rho^{AB}\in[B^{A}_{ss}/B^B_{ss},B^{B}_{ss}/B^A_{ss}]$, w.l.o.g. assuming that $B^{A}_{ss}<B^B_{ss}$.
+
+# Software
+
+-   Introduce a package for automatically implementing this method
+
+# The Returns to College Education over Time
+
+-   As an application let's see how the returns to college education change over time, using a data set where we can't do anything but identify on selection on observables
+
+-   Use ACS over time
+
+-   Quantify correlations and bound the effect
+
+-   Consider reasonable assumptions
+
+-   See if, under a free association, what the overlapping bounds look like. Can we reject that the effect is always the same?
+
+-   Add additional restrictions and see how this changes the shape of the bound path
+
+```{r}
+#| message: false
+if (!require("ipumsr")) stop("Reading IPUMS data into R requires the ipumsr package. It can be installed using the following command: install.packages('ipumsr')")
+
+ddi <- read_ipums_ddi("usa_00036.xml")
+data <- read_ipums_micro(ddi)
+
+library(fixest)
+library(hetset)
+library(data.table)
+library(ggplot2)
+
+setDT(data)
+data = data[EDUC >= 6]
+data[, COLLEGE_ATT := EDUC > 6]
+data[, RACE := sjlabelled::as_label(RACE)]
+data[RACE %in% c('Chinese','Japanese','Other Asian or Pacific Islander'), RACE := 'Asian']
+data[RACE %in% c('Other race, nec','Two major races','Three or more major races', 'American Indian or Alaska Native'), RACE := 'Other']
+data[, RACE := droplevels(RACE)]
+data[, HISPAN := HISPAN > 0]
+data[, State := sjlabelled::as_label(STATEFIP)]
+data = data[VETSTATD != 12]
+data[, ENG := SPEAKENG %in% c(2,3,4)]
+data[, COLLEGE_ATT := 1*COLLEGE_ATT]
+data = data[INCTOT > 0]
+data[, YEAR := factor(as.character(YEAR))]
+
+# get coef names
+m = feols(log(INCTOT) ~ COLLEGE_ATT+SEX+AGE+RACE+HISPAN+State+VETSTAT+ENG, data = data, weights = ~PERWT)
+covs = names(coef(m))[3:length(names(coef(m)))]
+
+
+bounds = ovb_bounds_by_setting(data,
+                               setting = 'YEAR',
+                               treatment = 'COLLEGE_ATT',
+                               model = 'feols(log(INCTOT) ~ COLLEGE_ATT+SEX+AGE+RACE+HISPAN+State+VETSTAT+ENG, data = data, weights = ~PERWT)',
+                               benchmark_covariates = covs,
+                               kd = .5)
+boundmat = supershort_rho_bounds_proposal(
+  data = data, 
+  setting = 'YEAR',
+  treatment = 'COLLEGE_ATT',
+  model = 'feols(log(INCTOT) ~ COLLEGE_ATT+SEX+AGE+RACE+HISPAN+State+VETSTAT+ENG, data = data, weights = ~PERWT)',
+  model_shorter = 'feols(log(INCTOT) ~ COLLEGE_ATT, data = data, weights = ~PERWT)')
+
+# Get the partial identification bounds
+pi_bounds = build_bounds(bounds, boundmat)
+
+# Get the univariate bounds table
+ubt = univariate_bounds_table(pi_bounds)
+
+btab = univariate_bounds_table(pi_bounds)
+btab |> gt::gt()
+fromlb = univariate_bounds_table(pi_bounds, pin_values = list('2003' = 'lower'))
+fromub = univariate_bounds_table(pi_bounds, pin_values = list('2003' = 'upper'))
+
+```
+
+```{r}
+allbo = list(data.table(
+  Bounds = 'Original',
+  Type = 'Full Bounds',
+  Setting = btab$setting,
+  Lower = btab$original_lower_bound,
+  Upper = btab$original_upper_bound
+),
+data.table(
+  Bounds = 'Univariate',
+  Type = 'Full Bounds',
+  Setting = btab$setting,
+  Lower = btab$lower_bound,
+  Upper = btab$upper_bound
+),
+data.table(
+  Bounds = 'Pinned Low',
+  Type = 'Pinned',
+  Setting = btab$setting,
+  Lower = fromlb$lower_bound,
+  Upper = fromlb$upper_bound
+),
+data.table(
+  Bounds = 'Pinned High',
+  Type = 'Pinned',
+  Setting = btab$setting,
+  Lower = fromub$lower_bound,
+  Upper = fromub$upper_bound
+)) |> rbindlist()
+
+ggplot(allbo, aes(x = Setting, ymin = Lower, ymax = Upper, color = Bounds)) + 
+  geom_errorbar(linewidth = 1) + 
+  theme_classic() +
+  facet_wrap(~Type, ncol = 2)
+```
+
+```{r}
+
+year_correl = .999
+boundmat_fixed = matrix(
+  c(NA,1/year_correl,year_correl^(-2),year_correl^(-3),year_correl^(-4),
+    0, NA, 1/year_correl, year_correl^(-2), year_correl^(-3),
+    0, 0, NA, 1/year_correl, year_correl^(-2),
+    0,0,0,NA,1/year_correl,
+    0,0,0,0,NA), ncol = 5, byrow = TRUE
+)
+colnames(boundmat_fixed) = as.character(c(2003,2008,2013,2018,2023))
+rownames(boundmat_fixed) = as.character(c(2003,2008,2013,2018,2023))
+
+# Get the partial identification bounds
+pi_bounds = build_bounds(bounds, boundmat_fixed)
+
+# Get the univariate bounds table
+bt = univariate_bounds_table(pi_bounds)
+lbt= univariate_bounds_table(pi_bounds, pin_values = list('2003' = 'lower'))
+ubt= univariate_bounds_table(pi_bounds, pin_values = list('2003' = 'upper'))
+```
+
+# The Returns to College Education by Geography
+
+-   Use the same data set but this time see how it varies across, let's say, states
+
+-   The reasonable assumptions linking together the effects is now different
+
+# Conclusion
