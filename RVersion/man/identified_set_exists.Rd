@@ -35,7 +35,8 @@ bounds = ovb_bounds_by_setting(close_college,
 # Put a 1.5 bound on Black vs Black & South and Neither vs South,
 # 2 on Neither vs. black and South vs. Black & South
 # and no restriction on Neither vs Black & South and on Black vs. South (setting to 0)
-# Setting all the lower triangle values of 0 will make them automatically the inverse of the upper triangle values
+# Setting all the lower triangle values of 0
+# will make them automatically the inverse of the upper triangle values
 boundmat = matrix(c(0, 2, 1.5, 0,
                     0, 0, 0, 1.5,
                     0, 0, 0, 2,

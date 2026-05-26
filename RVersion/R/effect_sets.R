@@ -1,7 +1,11 @@
+#' @import data.table
+#' @importFrom stats as.formula coef model.matrix na.omit
+NULL
+
 #' Build the full set of bounds for effect pairs
-#' @include helpers.R
 #'
 #' Build the full set of bounds for effect pairs based on partial identification bounds.
+#' @include helpers.R
 #' @param bounds_data A data frame containing the partial identification bounds for each individual setting's effect, from a function like \code{ovb_bounds_by_setting}. Must be a \code{data.frame} with a column for \code{setting} and columns for \code{original_estimate}, \code{adjusted_estimate}, \code{lower_plausible_bound}, and \code{upper_plausible_bound}. Other columns are acceptable.
 #' @param rho_bounds A matrix with the upper bound of rho_ij in the ith row and jth column, and the lower bound in the ith column and jth row. Trace values will be ignored. If all lower triangle values are 0, they will be set to the inverse of the corresponding upper bound. Alternately, provide a single real value to bound all pairs at that same value and its inverse. Set a bound to 0 to ignore it (set no restriction).
 #' @param settings_order A vector with the values of the settings in the order they are used in \code{rho_bounds}. Defaults to the order of settings in \code{bounds_data}.
@@ -23,7 +27,8 @@
 #' # Put a 1.5 bound on Black vs Black & South and Neither vs South,
 #' # 2 on Neither vs. black and South vs. Black & South
 #' # and no restriction on Neither vs Black & South and on Black vs. South (setting to 0)
-#' # Setting all the lower triangle values of 0 will make them automatically the inverse of the upper triangle values
+#' # Setting all the lower triangle values of 0
+#' # will make them automatically the inverse of the upper triangle values
 #' boundmat = matrix(c(0, 2, 1.5, 0,
 #'                     0, 0, 0, 1.5,
 #'                     0, 0, 0, 2,
@@ -67,6 +72,7 @@ build_bounds = function(bounds_data,
   }
 
   univariate_bounds_list = list()
+  setting = NULL
   for (i in 1:length(settings_order)) {
     s = settings_order[i]
     bounds_s = bounds_data[setting == s]
@@ -132,7 +138,8 @@ build_bounds = function(bounds_data,
 #' # Put a 1.5 bound on Black vs Black & South and Neither vs South,
 #' # 2 on Neither vs. black and South vs. Black & South
 #' # and no restriction on Neither vs Black & South and on Black vs. South (setting to 0)
-#' # Setting all the lower triangle values of 0 will make them automatically the inverse of the upper triangle values
+#' # Setting all the lower triangle values of 0
+#' # will make them automatically the inverse of the upper triangle values
 #' boundmat = matrix(c(0, 2, 1.5, 0,
 #'                     0, 0, 0, 1.5,
 #'                     0, 0, 0, 2,
@@ -211,7 +218,8 @@ identified_set_exists = function(full_bounds_set, check_only = NULL, return_one_
 #' # Put a 1.5 bound on Black vs Black & South and Neither vs South,
 #' # 2 on Neither vs. black and South vs. Black & South
 #' # and no restriction on Neither vs Black & South and on Black vs. South (setting to 0)
-#' # Setting all the lower triangle values of 0 will make them automatically the inverse of the upper triangle values
+#' # Setting all the lower triangle values of 0
+#' # will make them automatically the inverse of the upper triangle values
 #' boundmat = matrix(c(0, 2, 1.5, 0,
 #'                     0, 0, 0, 1.5,
 #'                     0, 0, 0, 2,
@@ -222,7 +230,9 @@ identified_set_exists = function(full_bounds_set, check_only = NULL, return_one_
 #'
 #' # Get the univariate bounds table
 #' univariate_bounds_table(boundset)
-#' # Note in this example that the bounds are only very slightly tighter than if we hadn't worried about cross-setting relationships (for Black).
+#' # Note in this example that the bounds are only very
+#' # slightly tighter than if we hadn't worried about cross-setting
+#' # relationships (for Black).
 #'
 #' @export
 univariate_bounds_table = function(full_bounds_set, pin_values = NULL, ...) {
@@ -291,6 +301,11 @@ univariate_bounds_table = function(full_bounds_set, pin_values = NULL, ...) {
     )
   }
 
+  estimate = NULL
+  upper_nu_bound = NULL
+  lower_nu_bound = NULL
+  lower_bound = NULL
+  upper_bound = NULL
   full_bounds_table[, lower_bound := estimate - upper_nu_bound]
   full_bounds_table[, upper_bound := estimate - lower_nu_bound]
 

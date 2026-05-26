@@ -1,3 +1,7 @@
+#' @import data.table
+#' @importFrom stats as.formula coef model.matrix na.omit
+NULL
+
 #' Propose a set of rho bounds
 #'
 #' This function suggests a plausible bound for rho, the proportional parameter relating the omitted variable bias in setting A with the omitted variable bias in setting B.
@@ -85,12 +89,18 @@ supershort_rho_bounds_proposal = function(data, setting,
     data.table(setting = x, eff_s = eff_s, eff_ss = eff_ss)
   })
   coefs_by_setting = data.table::rbindlist(coefs_by_setting)
+  eff_s = NULL
+  eff_ss = NULL
   coefs_by_setting[, diff := eff_s - eff_ss]
 
   rhotab = data.table::CJ(setting_a = settings_order,
                           setting_b = settings_order)
   rhotab = rhotab[sapply(setting_a, function(x) which(settings_order == x)) < sapply(setting_b, function(x) which(settings_order == x))]
 
+  setting_a = NULL
+  setting_b = NULL
+  rho_low = NULL
+  rho_high = NULL
   for (sa in settings_order[1:(length(settings_order) - 1)]) {
     diff_a = coefs_by_setting[setting == sa, diff]
     remaining_settings = settings_order[(which(settings_order == sa)+1):length(settings_order)]

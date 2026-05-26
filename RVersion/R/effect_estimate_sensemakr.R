@@ -1,3 +1,7 @@
+#' @import data.table
+#' @importFrom stats as.formula coef model.matrix na.omit
+NULL
+
 # linear effect estimation
 
 #' Estimate Partial Identification Effects by Setting with sensemakr
@@ -9,8 +13,9 @@
 #' @param treatment A string specifying the name of the treatment variable.
 #' @param model A string specifying the model to be estimated including the estimation function. Should refer to the name of the data set as \code{data}. For example, \code{'fixest::feols(formula = y ~ x + a + b, data = data)'}.
 #' @param benchmark_covariates A string vector specifying the names of baseline covariates to be used for partial identification with \code{sensemakr::ovb_bounds}.
-#' @param kd numeric vector. Parameterizes how many times stronger the confounder is related to the treatment in comparison to the observed benchmark covariate. Default value is 1 (confounder is as strong as benchmark covariate).
-#' @param ky numeric vector. Parameterizes how many times stronger the confounder is related to the outcome in comparison to the observed benchmark covariate. Default value is the same as \code{kd}.
+#' @param kd A numeric vector. Parameterizes how many times stronger the confounder is related to the treatment in comparison to the observed benchmark covariate. Default value is 1 (confounder is as strong as benchmark covariate).
+#' @param ky A numeric vector. Parameterizes how many times stronger the confounder is related to the outcome in comparison to the observed benchmark covariate. Default value is the same as \code{kd}.
+#' @param estimation_function The function that will be used to estimate the effect.
 #' @param verbose Logical indicating whether to print progress messages. Default is \code{FALSE}.
 #' @param ... Additional arguments to pass to \code{sensemakr::ovb_bounds}.
 #' @return A data frame containing the estimated effects by setting, along with estimation statistics like sample size, standard errors, and model fit.
@@ -61,6 +66,7 @@ ovb_bounds_by_setting = function(data,
                                      kd = kd,
                                      ky = ky,
                                      ...))
+      original_estimate = NULL
       b[, original_estimate := coef(m)[treatment]]
       b
     })
@@ -78,12 +84,19 @@ ovb_bounds_by_setting = function(data,
   }
 
   bounds = data.table::rbindlist(results_list, fill = TRUE)
+  failed = NULL
   if (!"failed" %in% colnames(bounds)) {
     bounds[, failed := FALSE]
   }
   bounds[is.na(failed), failed := FALSE]
   data.table::setcolorder(bounds,c('setting','failed'))
 
+  original_estimate = NULL
+  lower_plausible_bound = NULL
+  upper_plausible_bound = NULL
+  adjusted_estimate = NULL
+  lower_nu = NULL
+  upper_nu = NULL
   bounds[, lower_plausible_bound := original_estimate-abs(original_estimate - adjusted_estimate)]
   bounds[, upper_plausible_bound := original_estimate+abs(original_estimate - adjusted_estimate)]
   bounds[, lower_nu := original_estimate - lower_plausible_bound]
@@ -195,13 +208,13 @@ custom_ovb_bounds_by_setting = function(setting,
 #' parameters (\code{cf.y} / \code{cf.d}).
 #'
 #' Because DML is fit independently within each setting, both the point
-#' estimates and the bias bounds can vary across settings — which is the
+#' estimates and the bias bounds can vary across settings which is the
 #' purpose of this function.
 #'
 #' \strong{Benchmark mode} (\code{benchmark_covariates} supplied): calls
 #' \code{dml.sensemakr::sensemakr()} on each setting's DML fit to obtain
-#' \code{$bench.bounds}, extracting \code{gain.Y} (→ \code{cf.y}) and
-#' \code{gain.D} (→ \code{cf.d}) for that setting.  These are passed to
+#' \code{$bench.bounds}, extracting \code{gain.Y} (\code{cf.y}) and
+#' \code{gain.D} (\code{cf.d}) for that setting.  These are passed to
 #' \code{dml.sensemakr::dml_bounds()} to derive setting-specific
 #' \code{theta.m} and \code{bias.bound}.
 #'
@@ -217,10 +230,10 @@ custom_ovb_bounds_by_setting = function(setting,
 #' Listwise deletion is applied within each setting.
 #'
 #' @param data A data frame containing the data.
-#' @param setting A string — name of the variable defining estimation settings.
-#' @param y A string — name of the outcome variable.
-#' @param d A string — name of the treatment variable.
-#' @param x A character vector — names of covariates (conditioning set).
+#' @param setting A string name of the variable defining estimation settings.
+#' @param y A string name of the outcome variable.
+#' @param d A string name of the treatment variable.
+#' @param x A character vector names of covariates (conditioning set).
 #'   No intercept column should be included; one is excluded via \code{-1} in
 #'   the \code{model.matrix} call.
 #' @param benchmark_covariates A character vector of covariate names drawn from
@@ -246,7 +259,7 @@ custom_ovb_bounds_by_setting = function(setting,
 #' @return A \code{data.table} with one row per setting containing:
 #'   \describe{
 #'     \item{setting}{Setting value.}
-#'     \item{failed}{Logical — whether estimation failed for this setting.}
+#'     \item{failed}{Logical whether estimation failed for this setting.}
 #'     \item{bound_label}{Benchmark covariate name, or \code{cf.y}/\code{cf.d}
 #'       values in direct mode.}
 #'     \item{treatment}{Name of the treatment variable.}
@@ -278,7 +291,7 @@ custom_ovb_bounds_by_setting = function(setting,
 #'   model_type           = "plm"
 #' )
 #'
-#' # Direct mode — same cf.y/cf.d for all settings
+#' # Direct mode same cf.y/cf.d for all settings
 #' bounds_direct <- ovb_bounds_by_setting_dml_proposed(
 #'   close_college,
 #'   setting              = "blacksouth",
@@ -291,7 +304,7 @@ custom_ovb_bounds_by_setting = function(setting,
 #'   model_type           = "plm"
 #' )
 #'
-#' # Direct mode — different cf.y per setting (order matches unique(data$blacksouth))
+#' # Direct mode different cf.y per setting (order matches unique(data$blacksouth))
 #' bounds_varying <- ovb_bounds_by_setting_dml_proposed(
 #'   close_college,
 #'   setting              = "blacksouth",
@@ -380,7 +393,7 @@ ovb_bounds_by_setting_dml <- function(
 
   for (i in seq_along(settings)) {
     s <- settings[i]
-    if (verbose) message("  Setting: ", s, " — ", Sys.time())
+    if (verbose) message("  Setting: ", s, " ", Sys.time())
 
     data_s <- data_full[data_full[[setting]] == s, .SD, .SDcols = c(y, d, x)]
     data_s <- na.omit(data_s)
@@ -481,6 +494,7 @@ ovb_bounds_by_setting_dml <- function(
   # ---- assemble and compute plausibility intervals ---------------------
   bounds <- data.table::rbindlist(results_list, fill = TRUE)
 
+  failed = NULL
   if (!"failed" %in% colnames(bounds)) bounds[, failed := FALSE]
   bounds[is.na(failed), failed := FALSE]
 
@@ -488,6 +502,12 @@ ovb_bounds_by_setting_dml <- function(
 
   # Symmetric interval around original_estimate with half-width = bias_bound.
   # Formula mirrors ovb_bounds_by_setting exactly.
+  original_estimate = NULL
+  lower_plausible_bound = NULL
+  upper_plausible_bound = NULL
+  adjusted_estimate = NULL
+  lower_nu = NULL
+  upper_nu = NULL
   bounds[, lower_plausible_bound := original_estimate - abs(original_estimate - adjusted_estimate)]
   bounds[, upper_plausible_bound := original_estimate + abs(original_estimate - adjusted_estimate)]
   bounds[, lower_nu              := original_estimate - lower_plausible_bound]

@@ -1,3 +1,6 @@
+#' @importFrom stats as.formula coef model.matrix na.omit
+NULL
+
 #' Calculate C set of bounds
 #'
 #' Calculate the set that bounds the difference between two effects, from Huntington-Klein (2025).

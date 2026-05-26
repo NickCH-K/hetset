@@ -28,9 +28,11 @@ ovb_bounds_by_setting(
 
 \item{benchmark_covariates}{A string vector specifying the names of baseline covariates to be used for partial identification with \code{sensemakr::ovb_bounds}.}
 
-\item{kd}{numeric vector. Parameterizes how many times stronger the confounder is related to the treatment in comparison to the observed benchmark covariate. Default value is 1 (confounder is as strong as benchmark covariate).}
+\item{kd}{A numeric vector. Parameterizes how many times stronger the confounder is related to the treatment in comparison to the observed benchmark covariate. Default value is 1 (confounder is as strong as benchmark covariate).}
 
-\item{ky}{numeric vector. Parameterizes how many times stronger the confounder is related to the outcome in comparison to the observed benchmark covariate. Default value is the same as \code{kd}.}
+\item{ky}{A numeric vector. Parameterizes how many times stronger the confounder is related to the outcome in comparison to the observed benchmark covariate. Default value is the same as \code{kd}.}
+
+\item{estimation_function}{The function that will be used to estimate the effect.}
 
 \item{verbose}{Logical indicating whether to print progress messages. Default is \code{FALSE}.}
 

@@ -22,13 +22,13 @@ ovb_bounds_by_setting_dml(
 \arguments{
 \item{data}{A data frame containing the data.}
 
-\item{setting}{A string — name of the variable defining estimation settings.}
+\item{setting}{A string name of the variable defining estimation settings.}
 
-\item{y}{A string — name of the outcome variable.}
+\item{y}{A string name of the outcome variable.}
 
-\item{d}{A string — name of the treatment variable.}
+\item{d}{A string name of the treatment variable.}
 
-\item{x}{A character vector — names of covariates (conditioning set).
+\item{x}{A character vector names of covariates (conditioning set).
 No intercept column should be included; one is excluded via \code{-1} in
 the \code{model.matrix} call.}
 
@@ -63,7 +63,7 @@ In direct mode, defaults to \code{1}.  Can be overridden in either mode.}
 A \code{data.table} with one row per setting containing:
   \describe{
     \item{setting}{Setting value.}
-    \item{failed}{Logical — whether estimation failed for this setting.}
+    \item{failed}{Logical whether estimation failed for this setting.}
     \item{bound_label}{Benchmark covariate name, or \code{cf.y}/\code{cf.d}
       values in direct mode.}
     \item{treatment}{Name of the treatment variable.}
@@ -88,13 +88,13 @@ parameters (\code{cf.y} / \code{cf.d}).
 }
 \details{
 Because DML is fit independently within each setting, both the point
-estimates and the bias bounds can vary across settings — which is the
+estimates and the bias bounds can vary across settings which is the
 purpose of this function.
 
 \strong{Benchmark mode} (\code{benchmark_covariates} supplied): calls
 \code{dml.sensemakr::sensemakr()} on each setting's DML fit to obtain
-\code{$bench.bounds}, extracting \code{gain.Y} (→ \code{cf.y}) and
-\code{gain.D} (→ \code{cf.d}) for that setting.  These are passed to
+\code{$bench.bounds}, extracting \code{gain.Y} (\code{cf.y}) and
+\code{gain.D} (\code{cf.d}) for that setting.  These are passed to
 \code{dml.sensemakr::dml_bounds()} to derive setting-specific
 \code{theta.m} and \code{bias.bound}.
 
@@ -125,7 +125,7 @@ bounds <- ovb_bounds_by_setting_dml_proposed(
   model_type           = "plm"
 )
 
-# Direct mode — same cf.y/cf.d for all settings
+# Direct mode same cf.y/cf.d for all settings
 bounds_direct <- ovb_bounds_by_setting_dml_proposed(
   close_college,
   setting              = "blacksouth",
@@ -138,7 +138,7 @@ bounds_direct <- ovb_bounds_by_setting_dml_proposed(
   model_type           = "plm"
 )
 
-# Direct mode — different cf.y per setting (order matches unique(data$blacksouth))
+# Direct mode different cf.y per setting (order matches unique(data$blacksouth))
 bounds_varying <- ovb_bounds_by_setting_dml_proposed(
   close_college,
   setting              = "blacksouth",

@@ -22,7 +22,11 @@ net install causaldata, from("https://raw.githubusercontent.com/NickCH-K/hetset/
 
 ## Python
 
-To install the Python package
+To install the Python package, do
+
+```python
+pip install hetset
+```
 
 For the dev version (currently identical), use the green Code button on this page to [download this repository](https://github.com/NickCH-K/hetset/archive/refs/heads/main.zip), unzip it, change the directory to the `causaldata/Python` folder, and install with:
 
