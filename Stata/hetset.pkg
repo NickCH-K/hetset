@@ -1,0 +1,46 @@
+v 3
+d 'HETSET': module for partial identification of heterogeneous treatment effects across settings
+d
+d  hetset implements the partial identification framework of
+d  Huntington-Klein (2026, arXiv:2605.25483) for causal effects that
+d  vary across settings (subgroups). Effects are estimated separately
+d  by setting, with omitted-variable-bias plausibility intervals from
+d  sensemakr (Cinelli, Ferwerda, and Hazlett). Researchers then bound
+d  rho, the proportional relationship between the bias in one setting
+d  and another, and hetset uses linear programming to check whether an
+d  identified set of effects exists and to report the per-setting
+d  bounds implied by all restrictions jointly. A Stata port of the R
+d  package of the same name.
+d
+d  Requires: Stata version 14 (version 16 for identified_set_exists
+d  and univariate_bounds_table, which use the Mata LinearProgram()
+d  class).
+d
+d  Required package: sensemakr (from SSC).
+d
+d  Distribution-Date: 20260610
+d
+d  Author: Nick Huntington-Klein, Seattle University
+d  Support: email nhuntington-klein@@seattleu.edu
+d
+f ovb_bounds_by_setting.ado
+f ovb_bounds_by_setting.sthlp
+f custom_ovb_bounds_by_setting.ado
+f custom_ovb_bounds_by_setting.sthlp
+f supershort_rho_bounds_proposal.ado
+f supershort_rho_bounds_proposal.sthlp
+f build_bounds.ado
+f build_bounds.sthlp
+f identified_set_exists.ado
+f identified_set_exists.sthlp
+f univariate_bounds_table.ado
+f univariate_bounds_table.sthlp
+f estimate_het_effects.ado
+f estimate_het_effects.sthlp
+f c_bounds.ado
+f c_bounds.sthlp
+f hetset.sthlp
+f close_college.sthlp
+g close_college.dta
+g hetset_examples.do
+e

@@ -1,0 +1,10 @@
+v 3
+d hetset. Partial identification of heterogeneous treatment effects across settings.
+d
+d Huntington-Klein (2026), https://arxiv.org/abs/2605.25483.
+d
+d Distribution-Date: 20260610
+d
+d Nick Huntington-Klein, Seattle University, nhuntington-klein@seattleu.edu
+d
+p hetset Partial identification of heterogeneous treatment effects across settings

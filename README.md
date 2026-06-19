@@ -13,12 +13,13 @@ remotes::install_github('NickCH-K/hetset/RVersion/')
 
 ## Stata
 
-The Stata package can be installed once available with:
+The Stata package can be installed with:
 
 ```stata
-* Or for the dev version (currently identical)
 net install causaldata, from("https://raw.githubusercontent.com/NickCH-K/hetset/master/Stata/")
 ```
+
+**Note that the Stata version is an almost purely AI-translated version of the R package. It has been tested to ensure it matches the output of other packages but is not human-written.**
 
 ## Python
 
@@ -39,3 +40,5 @@ Or, if you're using something with IPython like Spyder, you might use
 ```python
 runfile('the/full/path/to/hetset/Python/setup.py', wdir='your/working/directory',args='install')
 ```
+
+**Note that the Python version is an largely (but not entirely) AI-translated version of the R package. It has been tested to ensure it matches the output of other packages but is mostly not human-written.**
